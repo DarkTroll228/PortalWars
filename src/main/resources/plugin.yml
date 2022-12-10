@@ -1,0 +1,4 @@
+name: PortalWars
+version: '${project.version}'
+main: com.darktroll.portalwars.PortalWars
+api-version: 1.16

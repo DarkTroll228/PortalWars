@@ -6,38 +6,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-public class ConfigHandler {
+public class ConfigHandler extends DataHandler{
 
-    private static ConfigHandler instance = new ConfigHandler();
-    private File gameInfoFile;
-    private FileConfiguration gameInfo;
+    private static ConfigHandler instance = new ConfigHandler("gameInfo.yml");
 
-    private ConfigHandler() {
-        this.gameInfoFile = new File(PortalWars.getInstance().getDataFolder(), "gameInfo.yml");
-        if(!this.gameInfoFile.exists()){
-            try {
-                this.gameInfoFile.createNewFile();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        this.gameInfo = YamlConfiguration.loadConfiguration(this.gameInfoFile);
-    }
-
-    public void saveGameInfo() {
-        try {
-            this.gameInfo.save(this.gameInfoFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private ConfigHandler(String child) {
+        super(child);
     }
 
     public static ConfigHandler getInstance() {
         return instance;
     }
 
-    public FileConfiguration getGameInfo() {
-        return gameInfo;
-    }
 }

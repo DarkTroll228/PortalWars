@@ -4,26 +4,24 @@ import com.darktroll.portalwars.PortalWars;
 import com.darktroll.portalwars.data.ConfigHandler;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Game {
-    private int minPlayers;
-    private int maxPlayers;
-    private World world;
+    private PortalWars portalWars = PortalWars.getInstance();
+    private final int minPlayers;
+    private final int maxPlayers;
+    private final World world;
     private GameState state = GameState.WAITING;
     private List<Location> spawnPoints = new ArrayList<>();
     private List<GamePlayer> players = new ArrayList<>();
 
     public Game(String gameName) {
-        FileConfiguration configuration = ConfigHandler.getInstance().getGameInfo();
+        FileConfiguration configuration = ConfigHandler.getInstance().getConfigFile();
         this.minPlayers = configuration.getInt("games." + gameName + ".minPlayers");
         this.maxPlayers = configuration.getInt("games." + gameName + ".maxPlayers");
-        this.world = Bukkit.createWorld(new WorldCreator("games." + gameName + ".world"));
+        this.world = Bukkit.createWorld(new WorldCreator(configuration.getString("games." + gameName + ".worldName") + "_active"));
         for(String point : configuration.getStringList("games." + gameName + ".spawnPoints")) {
             try{
                 String[] values = point.split(",");
@@ -54,6 +52,8 @@ public class Game {
         for (int i = 0; i < players.size(); i++) {
             GamePlayer player = players.get(i);
             Location point = spawnPoints.get(i);
+            player.setState(GamePlayer.PlayerState.IN_GAME);
+            this.state = GameState.ACTIVE;
 
             player.getPlayer().teleport(point);
             player.getPlayer().getInventory().clear();
@@ -77,4 +77,9 @@ public class Game {
     public World getWorld() {
         return world;
     }
+
+    public List<GamePlayer> getPlayers() {
+        return players;
+    }
+
 }

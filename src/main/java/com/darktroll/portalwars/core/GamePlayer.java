@@ -20,4 +20,12 @@ public class GamePlayer {
     public enum PlayerState {
         NOT_IN_GAME, WAITING, PREPARATION, IN_GAME, ENDING
     }
+
+    public PlayerState getState() {
+        return state;
+    }
+
+    public void setState(PlayerState state) {
+        this.state = state;
+    }
 }
